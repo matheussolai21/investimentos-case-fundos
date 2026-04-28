@@ -1,0 +1,84 @@
+.header-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
+  padding: 0 24px;
+  background: linear-gradient(135deg, #FF9800 0%, #FF5722 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-section mat-icon {
+  font-size: 28px;
+  height: 28px;
+  width: 28px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.user-section {
+  cursor: pointer;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 24px;
+  transition: background-color 0.3s;
+}
+
+.user-info:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.user-button {
+  color: white ;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .header-toolbar {
+    padding: 0 16px;
+  }
+  
+  .title {
+    font-size: 16px;
+  }
+  
+  .user-name {
+    display: none;
+  }
+}

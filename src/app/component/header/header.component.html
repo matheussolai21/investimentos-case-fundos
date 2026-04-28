@@ -1,0 +1,29 @@
+<header>
+   <mat-toolbar color="primary" class="header-toolbar">
+  <section class="header-content">
+    <section class="logo-section">
+      <span class="title">Fundos Investimentos</span>
+    </section>
+    
+    <section class="user-section" [matMenuTriggerFor]="menu">
+      <section class="user-info">
+        <figure>
+            <img src="https://ui-avatars.com/api/?background=2196F3&color=fff&rounded=true&size=40&name=User" 
+             alt="Avatar" 
+             class="user-avatar">
+        </figure>
+
+        <button mat-button class="user-button">
+          <span class="user-name">Usuário</span>
+        </button>
+      </section>
+    </section>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="logout()">
+        <span>sair</span>
+      </button>
+    </mat-menu>
+  </section>
+</mat-toolbar>
+</header>

@@ -1,0 +1,120 @@
+.main-content {
+  margin-top: 64px;
+  margin-bottom: 60px;
+  min-height: calc(100vh - 124px);
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container-principal {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: center;
+}
+
+.container-form-field {
+  max-width: 450px;
+  width: 100%;
+  background: white;
+  padding: 40px 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.example-right-align {
+  text-align: left;
+}
+
+/* Botões */
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.form-actions button {
+  flex: 1;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Link de registro */
+.register-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 8px;
+}
+
+.register-link span {
+  color: #666;
+  font-size: 14px;
+}
+
+/* Spinner no botão */
+button mat-spinner {
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.full-width .mat-mdc-icon-button {
+  width: 40px;
+  height: 40px;
+}
+
+.full-width .mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .main-content {
+    margin-top: 56px;
+    margin-bottom: 50px;
+    min-height: calc(100vh - 106px);
+    padding: 16px;
+  }
+
+  .container-form-field {
+    padding: 32px 20px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}

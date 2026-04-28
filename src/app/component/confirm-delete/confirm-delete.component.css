@@ -1,0 +1,37 @@
+.dialog-title {
+  color: #f44336;
+  font-size: 20px;
+  font-weight: 500;
+  margin: 0;
+  padding: 20px 24px 0 24px;
+}
+
+.dialog-content {
+  min-width: 350px;
+  padding: 16px 24px;
+}
+
+.warning-text {
+  color: #999;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.dialog-actions {
+  padding: 16px 24px 20px 24px;
+  gap: 12px;
+}
+
+@media (max-width: 500px) {
+  .dialog-content {
+    min-width: auto;
+  }
+  
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+  
+  .dialog-actions button {
+    width: 100%;
+  }
+}

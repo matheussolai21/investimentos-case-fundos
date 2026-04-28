@@ -1,0 +1,15 @@
+<h2 mat-dialog-title class="dialog-title">
+   Confirmar Exclusão
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <p>Tem certeza que deseja excluir o fundo <strong>"{{ data.nome }}"</strong>?</p>
+  <p class="warning-text">Esta ação não pode ser desfeita.</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">
+    Excluir
+  </button>
+</mat-dialog-actions>

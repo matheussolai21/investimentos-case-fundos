@@ -1,0 +1,152 @@
+{
+  "tipos_fundo": [
+    {
+      "codigo": 1,
+      "nome": "RENDA_FIXA"
+    },
+    {
+      "codigo": 2,
+      "nome": "RENDA_VARIAVEL"
+    },
+    {
+      "codigo": 3,
+      "nome": "MULTIMERCADO"
+    },
+    {
+      "codigo": 4,
+      "nome": "PREVIDENCIARIO"
+    },
+    {
+      "codigo": 5,
+      "nome": "CAMBIAL"
+    },
+    {
+      "codigo": 6,
+      "nome": "CDB"
+    },
+    {
+      "codigo": 7,
+      "nome": "poupança"
+    }
+  ],
+  "fundos": [
+    {
+      "codigo": "FND001",
+      "nome": "rodrigo goes",
+      "cnpj": "37.120.481/0001-89",
+      "codigo_tipo": 1,
+      "patrimonio": 70000
+    },
+    {
+      "codigo": "FND002",
+      "nome": "Americanas",
+      "cnpj": "21.527.101/0001-95",
+      "codigo_tipo": 2,
+      "patrimonio": 850000000
+    },
+    {
+      "codigo": "FND003",
+      "nome": "Itaú",
+      "cnpj": "25.783.354/0001-80",
+      "codigo_tipo": 3,
+      "patrimonio": 3200000000
+    },
+    {
+      "codigo": "FND004",
+      "nome": "Nivea",
+      "cnpj": "01.862.533/0001-45",
+      "codigo_tipo": 4,
+      "patrimonio": 500000000
+    },
+    {
+      "codigo": "13444",
+      "nome": "solai",
+      "cnpj": "45.669.817/0001-95",
+      "codigo_tipo": 4,
+      "patrimonio": 600000
+    }
+  ],
+  "usuarios": [
+    {
+      "id": 1,
+      "username": "admin",
+      "email": "admin@itau.com.br",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "nome": "Administrador Itaú",
+      "role": "admin",
+      "created_at": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "username": "usuario",
+      "email": "usuario@itau.com.br",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "nome": "Usuário Comum",
+      "role": "user",
+      "created_at": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "username": "gestor",
+      "email": "gestor@itau.com.br",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "nome": "Gestor de Fundos",
+      "role": "gestor",
+      "created_at": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "username": "joao.silva",
+      "email": "joao.silva@itau.com.br",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "nome": "João Silva",
+      "role": "user",
+      "created_at": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "username": "maria.santos",
+      "email": "maria.santos@itau.com.br",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "nome": "Maria Santos",
+      "role": "user",
+      "created_at": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "username": "admin",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "id": 6
+    },
+    {
+      "username": "admin",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "id": 7
+    },
+    {
+      "username": "admin",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "id": 8
+    },
+    {
+      "username": "usuario",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "id": 9
+    },
+    {
+      "username": "admin",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "id": 10
+    },
+    {
+      "username": "admin",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "id": 11
+    },
+    {
+      "username": "admin",
+      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
+      "id": 12
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
