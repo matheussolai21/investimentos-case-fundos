@@ -17,12 +17,6 @@ import { Fundo } from '../../interfaces/fundos.interface';
 import { NgxMaskDirective } from 'ngx-mask';
 import { ValidatorsService } from '../../Services/validators.service';
 
-export interface TipoFundo {
-  codigo: number;
-  nome: string;
-  descricao: string;
-}
-
 @Component({
   selector: 'app-Forms-new-founds',
   templateUrl: './Forms-new-founds.component.html',
@@ -47,7 +41,6 @@ export class FormsNewFoundsComponent implements OnInit {
 
   fundoForm: FormGroup;
   loading = false;
-  tiposFundo: TipoFundo[] = [];
 
 
   constructor(
@@ -91,8 +84,6 @@ export class FormsNewFoundsComponent implements OnInit {
     }
 
     this.loading = true;
-
-    const cnpjLimpo = this.fundoForm.value.cnpj.replace(/\D/g, '');
 
     const fundoData: Fundo = {
       codigo: this.fundoForm.value.codigo, // Gerar código único ou usar um serviço para isso
