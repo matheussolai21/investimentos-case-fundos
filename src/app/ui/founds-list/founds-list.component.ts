@@ -166,7 +166,6 @@ export class FoundsListComponent implements OnInit, OnDestroy {
 
     const codigoBusca = code.trim().toUpperCase();
 
-    // Primeiro tenta encontrar localmente
     const fundoLocal = this.dataSource.find(fundo =>
       fundo.codigo.toUpperCase() === codigoBusca
     );
@@ -179,7 +178,6 @@ export class FoundsListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Se não encontrar localmente, busca na API
     this.foundsService.getFoundsByCode(codigoBusca).subscribe({
       next: (fundo) => {
         console.log('Fundo encontrado na API:', fundo);
@@ -233,7 +231,7 @@ export class FoundsListComponent implements OnInit, OnDestroy {
               mensagemErro = error.error.error;
             }
 
-            this.snackBar.open(`❌ ${mensagemErro}`, 'Fechar', {
+            this.snackBar.open(` ${mensagemErro}`, 'Fechar', {
               duration: 5000,
               panelClass: ['error-snackbar']
             });
@@ -304,7 +302,6 @@ export class FoundsListComponent implements OnInit, OnDestroy {
   const control = this.editFormGroup.get('patrimonio');
   let value = control?.value;
   if (typeof value === 'string') {
-    // Remove tudo exceto números, vírgula e ponto (mantém separador decimal)
     const numericStr = value.replace(/[^0-9,.]/g, '').replace(',', '.');
     const numberValue = parseFloat(numericStr);
     if (!isNaN(numberValue)) {
@@ -312,7 +309,5 @@ export class FoundsListComponent implements OnInit, OnDestroy {
     }
   }
 }
-
-
 
 }
