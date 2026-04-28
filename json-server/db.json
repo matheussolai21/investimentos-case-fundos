@@ -32,10 +32,10 @@
   "fundos": [
     {
       "codigo": "FND001",
-      "nome": "rodrigo goes",
-      "cnpj": "37.120.481/0001-89",
+      "nome": "vineza",
+      "cnpj": "29.187.458/0001-83",
       "codigo_tipo": 1,
-      "patrimonio": 70000
+      "patrimonio": 700000
     },
     {
       "codigo": "FND002",
@@ -59,11 +59,18 @@
       "patrimonio": 500000000
     },
     {
-      "codigo": "13444",
-      "nome": "solai",
-      "cnpj": "45.669.817/0001-95",
-      "codigo_tipo": 4,
-      "patrimonio": 600000
+      "codigo": "15555",
+      "nome": "teste post",
+      "cnpj": "36.638.790/0001-82",
+      "codigo_tipo": 2,
+      "patrimonio": 750000
+    },
+    {
+      "codigo": "64545",
+      "nome": "testee",
+      "cnpj": "53.027.645/0001-84",
+      "codigo_tipo": 1,
+      "patrimonio": 5000000
     }
   ],
   "usuarios": [

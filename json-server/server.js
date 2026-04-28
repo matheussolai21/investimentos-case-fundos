@@ -285,22 +285,7 @@ const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
   console.log(`
-  ╔══════════════════════════════════════════════════════╗
-  ║         JSON Server - API de Fundos Itaú             ║
-  ╠══════════════════════════════════════════════════════╣
-  ║  ✅ Servidor rodando em: http://localhost:${PORT}     ║
-  ╠══════════════════════════════════════════════════════╣
-  ║  🔓 Rotas Públicas:                                  ║
-  ║  POST   /login           - Login                     ║
-  ║  POST   /register        - Registro                  ║
-  ║  GET    /health          - Health check              ║
-  ║  GET    /fundos          - Listar fundos             ║
-  ║  GET    /fundos/:codigo  - Detalhes fundo            ║
-  ║  POST   /fundos          - Criar fundo               ║
-  ║  PUT    /fundos/:codigo  - Editar fundo              ║
-  ║  DELETE /fundos/:codigo  - Excluir fundo             ║
-  ║  PUT    /fundos/:codigo/patrimonio - Alterar patrimônio ║
-  ║  GET    /tipos-fundo     - Listar tipos              ║
-  ╚══════════════════════════════════════════════════════╝
+   "inialização do servidor JSON Server"
+ 
   `);
 });
