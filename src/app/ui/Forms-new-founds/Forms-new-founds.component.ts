@@ -73,14 +73,14 @@ export class FormsNewFoundsComponent implements OnInit {
     this.loading = true;
 
     const fundoData: Fundo = {
-      codigo: this.fundoForm.value.codigo, // Gerar código único ou usar um serviço para isso
+      codigo: this.fundoForm.value.codigo, 
       nome: this.fundoForm.value.nome.trim(),
       cnpj: this.validatorsService.formatCNPJ(this.fundoForm.value.cnpj.trim()),
       codigo_tipo: Number(this.fundoForm.value.codigo_tipo),
       patrimonio: Number(this.fundoForm.value.patrimonio)
     };
 
-    this.AddFounds(fundoData) // inserir no component da proxima pagina
+    this.AddFounds(fundoData) 
 
 
     this.snackBar.open(`Fundo ${fundoData.codigo} salvo com sucesso!`, 'Fechar', { duration: 3000 });
