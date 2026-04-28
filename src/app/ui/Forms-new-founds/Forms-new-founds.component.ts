@@ -83,7 +83,6 @@ export class FormsNewFoundsComponent implements OnInit {
     this.AddFounds(fundoData) 
 
 
-    this.snackBar.open(`Fundo ${fundoData.codigo} salvo com sucesso!`, 'Fechar', { duration: 3000 });
   }
 
 

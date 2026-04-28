@@ -76,10 +76,8 @@ describe('FormsNewFoundsComponent', () => {
     spyOn(component, 'AddFounds').and.callThrough();
     component.onSubmit();
 
-    // Verifica se formatCNPJ foi chamado com o CNPJ cru
     expect(validatorsServiceSpy.formatCNPJ).toHaveBeenCalledWith('12345678000199');
 
-    // Verifica se AddFounds foi chamado com o payload correto (CNPJ formatado)
     const expectedPayload: Fundo = {
       codigo: 'FND001',
       nome: 'Novo Fundo',
@@ -89,7 +87,6 @@ describe('FormsNewFoundsComponent', () => {
     };
     expect(component.AddFounds).toHaveBeenCalledWith(expectedPayload);
 
-    // Snackbar de "salvo com sucesso" (do onSubmit) deve ter sido chamado
     expect(snackBarSpy.open).toHaveBeenCalledWith(`Fundo FND001 salvo com sucesso!`, 'Fechar', { duration: 3000 });
   });
 
@@ -105,7 +102,7 @@ describe('FormsNewFoundsComponent', () => {
     foundsServiceSpy.PostFounds.and.returnValue(of({}));
     component.AddFounds(fundoData);
 
-    tick(2000); // aguarda o setTimeout dentro do next
+    tick(2000); 
 
     expect(foundsServiceSpy.PostFounds).toHaveBeenCalledWith(fundoData);
     expect(snackBarSpy.open).toHaveBeenCalledWith('Fundo criado com sucesso!', 'Fechar', { duration: 3000 });
