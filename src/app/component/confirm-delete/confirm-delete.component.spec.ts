@@ -1,17 +1,22 @@
-/* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { ConfirmDeleteComponent } from './confirm-delete.component';
 
 describe('ConfirmDeleteComponent', () => {
   let component: ConfirmDeleteComponent;
   let fixture: ComponentFixture<ConfirmDeleteComponent>;
+  let dialogRefSpy: jasmine.SpyObj<MatDialogRef<ConfirmDeleteComponent>>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
+    dialogRefSpy = jasmine.createSpyObj<MatDialogRef<ConfirmDeleteComponent>>('MatDialogRef', ['close']);
+
     TestBed.configureTestingModule({
-      declarations: [ ConfirmDeleteComponent ]
+      imports: [ConfirmDeleteComponent],
+      providers: [
+        { provide: MatDialogRef, useValue: dialogRefSpy },
+        { provide: MAT_DIALOG_DATA, useValue: { nome: 'Fundo X', codigo: 'FND-X' } }
+      ]
     })
     .compileComponents();
   }));
@@ -24,5 +29,17 @@ describe('ConfirmDeleteComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should close dialog with true on confirm', () => {
+    component.onConfirm();
+
+    expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
+  });
+
+  it('should close dialog with false on cancel', () => {
+    component.onCancel();
+
+    expect(dialogRefSpy.close).toHaveBeenCalledWith(false);
   });
 });

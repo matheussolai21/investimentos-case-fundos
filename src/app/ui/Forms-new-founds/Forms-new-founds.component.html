@@ -14,12 +14,13 @@
         <form [formGroup]="fundoForm" (ngSubmit)="onSubmit()">
 
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>codigo</mat-label>
+            <mat-label>Codigo</mat-label>
             <input matInput formControlName="codigo" placeholder="ex: FND001" />
-              @if (fundoForm.get('codigo')?.hasError('required') && fundoForm.get('codigo')?.touched) {
+            @if (fundoForm.get('codigo')?.hasError('required') && fundoForm.get('codigo')?.touched) {
             <mat-error>codigo é obrigatório</mat-error>
             }
           </mat-form-field>
+
           <!-- Campo NOME -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Nome do Fundo</mat-label>
@@ -32,20 +33,17 @@
             }
           </mat-form-field>
 
-          <!-- Campo CNPJ -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>CNPJ</mat-label>
-            <input matInput formControlName="cnpj" placeholder="12.345.678/0001-99" />
-
+            <input matInput formControlName="cnpj" mask="00.000.000/0000-00" placeholder="12.345.678/0001-99" />
             @if (fundoForm.get('cnpj')?.hasError('required') && fundoForm.get('cnpj')?.touched) {
             <mat-error>CNPJ é obrigatório</mat-error>
             }
-            @if (fundoForm.get('cnpj')?.hasError('pattern') && fundoForm.get('cnpj')?.touched) {
-            <mat-error>CNPJ inválido. Formato: 12.345.678/0001-99</mat-error>
+            @if (fundoForm.get('cnpj')?.hasError('cnpjInvalid') && fundoForm.get('cnpj')?.touched) {
+            <mat-error>CNPJ deve conter 14 dígitos</mat-error>
             }
           </mat-form-field>
 
-          <!-- Campo CÓDIGO TIPO (SELECT) -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Tipo de Fundo</mat-label>
             <mat-select formControlName="codigo_tipo">
@@ -56,27 +54,23 @@
               <mat-option value="5">5 - Previdência</mat-option>
               <mat-option value="6">6 - Imobiliário</mat-option>
             </mat-select>
-
             @if (fundoForm.get('codigo_tipo')?.hasError('required') && fundoForm.get('codigo_tipo')?.touched) {
             <mat-error>Tipo de fundo é obrigatório</mat-error>
             }
           </mat-form-field>
 
-          <!-- Campo PATRIMÔNIO -->
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Patrimônio (R$)</mat-label>
-            <input matInput type="number" formControlName="patrimonio" placeholder="0,00" />
-            <span matTextPrefix>R$ &nbsp;</span>
-
+            <input matInput type="text" formControlName="patrimonio" mask="separator" thousandSeparator="."
+              decimalSeparator="," prefix="R$ " [allowNegativeNumbers]="false" />
             @if (fundoForm.get('patrimonio')?.hasError('required') && fundoForm.get('patrimonio')?.touched) {
             <mat-error>Patrimônio é obrigatório</mat-error>
             }
             @if (fundoForm.get('patrimonio')?.hasError('min') && fundoForm.get('patrimonio')?.touched) {
-            <mat-error>Patrimônio deve ser maior que zero</mat-error>
+            <mat-error>Valor mínimo é R$ 0,01</mat-error>
             }
           </mat-form-field>
 
-          <!-- Botões -->
           <section class="form-actions">
             <button mat-button type="button" (click)="cancelar()" [disabled]="loading">
               Cancelar
@@ -88,6 +82,7 @@
               {{ loading ? 'Salvando...' : 'Cadastrar Fundo' }}
             </button>
           </section>
+
         </form>
       </mat-card-content>
     </mat-card>

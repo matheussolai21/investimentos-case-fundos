@@ -32,51 +32,44 @@
   "fundos": [
     {
       "codigo": "FND001",
-      "nome": "vineza",
-      "cnpj": "29.187.458/0001-83",
+      "nome": "Itub4 Fic6",
+      "cnpj": "29.187.458/0001-84",
       "codigo_tipo": 1,
-      "patrimonio": 700000
+      "patrimonio": 9000000000
     },
     {
       "codigo": "FND002",
-      "nome": "Americanas",
-      "cnpj": "21.527.101/0001-95",
+      "nome": "Apple",
+      "cnpj": "21.527.101/0001-96",
       "codigo_tipo": 2,
-      "patrimonio": 850000000
-    },
-    {
-      "codigo": "FND003",
-      "nome": "Itaú",
-      "cnpj": "25.783.354/0001-80",
-      "codigo_tipo": 3,
-      "patrimonio": 3200000000
+      "patrimonio": 900000000
     },
     {
       "codigo": "FND004",
-      "nome": "Nivea",
+      "nome": "Privado",
       "cnpj": "01.862.533/0001-45",
       "codigo_tipo": 4,
       "patrimonio": 500000000
     },
     {
-      "codigo": "15555",
-      "nome": "teste post",
-      "cnpj": "36.638.790/0001-82",
-      "codigo_tipo": 2,
-      "patrimonio": 750000
+      "codigo": "FND005",
+      "nome": "publico",
+      "cnpj": "01.862.533/0001-45",
+      "codigo_tipo": 5,
+      "patrimonio": 500000000
     },
     {
-      "codigo": "64545",
-      "nome": "testee",
-      "cnpj": "53.027.645/0001-84",
-      "codigo_tipo": 1,
-      "patrimonio": 5000000
+      "codigo": "FND006",
+      "nome": "Renda Premium",
+      "cnpj": "84.822.722/0001-11",
+      "codigo_tipo": 6,
+      "patrimonio": 500000000
     }
   ],
   "usuarios": [
     {
       "id": 1,
-      "username": "admin",
+      "username": "Solai",
       "email": "admin@itau.com.br",
       "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
       "nome": "Administrador Itaú",
@@ -118,41 +111,6 @@
       "nome": "Maria Santos",
       "role": "user",
       "created_at": "2026-01-01T00:00:00.000Z"
-    },
-    {
-      "username": "admin",
-      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
-      "id": 6
-    },
-    {
-      "username": "admin",
-      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
-      "id": 7
-    },
-    {
-      "username": "admin",
-      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
-      "id": 8
-    },
-    {
-      "username": "usuario",
-      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
-      "id": 9
-    },
-    {
-      "username": "admin",
-      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
-      "id": 10
-    },
-    {
-      "username": "admin",
-      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
-      "id": 11
-    },
-    {
-      "username": "admin",
-      "password": "$2a$10$YKqGmKqQEqxvzPLVo3YrYOzQkBKZHVXZQZQZQZQZQZQZQZQZQZQ",
-      "id": 12
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

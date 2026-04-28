@@ -1,197 +1,176 @@
 <app-header></app-header>
+
 <main class="main-content">
- <section class="container">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        Gestão de Fundos de Investimento
-      </mat-card-title>
-      <mat-card-subtitle>
-        Lista completa de todos os fundos cadastrados
-      </mat-card-subtitle>
-    </mat-card-header>
+  <section class="container">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Gestão de Fundos de Investimento
+        </mat-card-title>
+        <mat-card-subtitle>
+          Lista completa de todos os fundos cadastrados
+        </mat-card-subtitle>
+      </mat-card-header>
 
-    <mat-card-content>
-      <!-- Barra de pesquisa e botão adicionar -->
-      <section class="toolbar-actions">
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Pesquisar</mat-label>
-          <input 
-            matInput 
-            [(ngModel)]="searchTerm" 
-            (input)="filterFoundByCode(searchTerm)"
-            placeholder="Buscar por código"
-          />
-        </mat-form-field>
-        
-        
-        <button 
-          mat-raised-button 
-          color="primary" 
-          class="add-button"
-          (click)="RedirectByForm()"
-        >
-        <span>Adicionar novo fundo</span>
-        </button>
-      </section>
+      <mat-card-content>
+        <section class="toolbar-actions">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Pesquisar</mat-label>
+            <input matInput [(ngModel)]="searchTerm" (input)="filterFoundByCode(searchTerm)"
+              placeholder="Buscar por código" />
+          </mat-form-field>
 
-      <!-- Tabela -->
-      <section class="table-responsive">
-        <table mat-table [dataSource]="paginatedData" class="mat-elevation-z2">
-          
-          <!-- Coluna CÓDIGO -->
-          <ng-container matColumnDef="codigo">
-            <th mat-header-cell *matHeaderCellDef> CÓDIGO </th>
-            <td mat-cell *matCellDef="let fundo"> 
-              <strong>{{ fundo.codigo }}</strong>
-            </td>
-          </ng-container>
+          <button mat-raised-button color="primary" class="add-button" (click)="RedirectByForm()">
+            <span>Adicionar novo fundo</span>
+          </button>
+        </section>
 
-          <!-- Coluna NOME -->
-          <ng-container matColumnDef="nome">
-            <th mat-header-cell *matHeaderCellDef> NOME </th>
-            <td mat-cell *matCellDef="let fundo"> {{ fundo.nome }} </td>
-          </ng-container>
+        <section class="table-responsive">
+          <table mat-table [dataSource]="paginatedData" class="mat-elevation-z2">
 
-          <!-- Coluna CNPJ -->
-          <ng-container matColumnDef="cnpj">
-            <th mat-header-cell *matHeaderCellDef> CNPJ </th>
-            <td mat-cell *matCellDef="let fundo"> {{ fundo.cnpj }} </td>
-          </ng-container>
+            <ng-container matColumnDef="codigo">
+              <th mat-header-cell *matHeaderCellDef> CÓDIGO </th>
+              <td mat-cell *matCellDef="let fundo">
+                <strong>{{ fundo.codigo }}</strong>
+              </td>
+            </ng-container>
 
-          <!-- Coluna CÓDIGO TIPO -->
-          <ng-container matColumnDef="codigo_tipo">
-            <th mat-header-cell *matHeaderCellDef> CÓDIGO TIPO </th>
-            <td mat-cell *matCellDef="let fundo">
-              <span>
-                {{ fundo.codigo_tipo }}
-              </span>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="nome">
+              <th mat-header-cell *matHeaderCellDef> NOME </th>
+              <td mat-cell *matCellDef="let fundo"> {{ fundo.nome }} </td>
+            </ng-container>
 
-          <!-- Coluna PATRIMÔNIO -->
-          <ng-container matColumnDef="patrimonio">
-            <th mat-header-cell *matHeaderCellDef> PATRIMÔNIO </th>
-            <td mat-cell *matCellDef="let fundo">
-              <span class="patrimonio-value">
-                {{ formatHeritage(fundo.patrimonio) }}
-              </span>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="cnpj">
+              <th mat-header-cell *matHeaderCellDef> CNPJ </th>
+              <td mat-cell *matCellDef="let fundo"> {{ fundo.cnpj }} </td>
+            </ng-container>
 
-          <!-- Coluna AÇÕES -->
-          <ng-container matColumnDef="acoes">
-            <th mat-header-cell *matHeaderCellDef> AÇÕES </th>
-            <td mat-cell *matCellDef="let fundo">
-              <div class="acoes-buttons">
-                <button 
-                  mat-mini-fab 
-                  color="accent" 
-                  matTooltip="Editar Fundo"
-                  (click)="editFound(fundo)"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
-                
-                <button 
-                  mat-mini-fab 
-                  color="warn" 
-                  matTooltip="Excluir Fundo"
-                  (click)="deleteFound(fundo)"
-                >
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="codigo_tipo">
+              <th mat-header-cell *matHeaderCellDef> CÓDIGO TIPO </th>
+              <td mat-cell *matCellDef="let fundo">
+                <span>
+                  {{ fundo.codigo_tipo }}
+                </span>
+              </td>
+            </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <ng-container matColumnDef="patrimonio">
+              <th mat-header-cell *matHeaderCellDef> PATRIMÔNIO </th>
+              <td mat-cell *matCellDef="let fundo">
+                <span class="patrimonio-value">
+                  {{ validatorsService.formatHeritage(fundo.patrimonio) }}
+                </span>
+              </td>
+            </ng-container>
 
-          <!-- Linha quando não há dados -->
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-              <div class="no-data">
-                <mat-icon>info</mat-icon>
-                <span>Nenhum fundo encontrado</span>
-              </div>
-            </td>
-          </tr>
-        </table>
-      </section>
+            <ng-container matColumnDef="acoes">
+              <th mat-header-cell *matHeaderCellDef> AÇÕES </th>
+              <td mat-cell *matCellDef="let fundo">
+                <div class="acoes-buttons">
+                  <button mat-mini-fab color="accent" matTooltip="Editar Fundo" (click)="editFound(fundo)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
 
-      <!-- Paginação -->
-      <mat-paginator 
-        [length]="totalRecords"
-        [pageSize]="pageSize"
-        [pageSizeOptions]="pageSizeOptions"
-        (page)="onPageChange($event)"
-        showFirstLastButtons
-      >
-      </mat-paginator>
+                  <button mat-mini-fab color="warn" matTooltip="Excluir Fundo" (click)="deleteFound(fundo)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
 
-      <!-- Resumo -->
-      <section class="summary" *ngIf="totalRecords > 0">
-        <span>Total de fundos: <strong>{{ totalRecords }}</strong></span>
-      </section>
-    </mat-card-content>
-  </mat-card>
- </section>
- <section class="edit-modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()">
-  <section class="edit-modal" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2>Editar Fundo</h2>
-      <button 
-        mat-icon-button 
-        class="close-button"
-        (click)="closeEditModal()"
-        [disabled]="editLoading"
-        aria-label="Fechar modal"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-    <form [formGroup]="editFormGroup" class="modal-content">
-      <mat-form-field appearance="outline" class="modal-field">
-        <mat-label>Código</mat-label>
-        <input matInput formControlName="codigo" />
-        <mat-error *ngIf="editFormGroup.get('codigo')?.hasError('required')">Código é obrigatório</mat-error>
-      </mat-form-field>
+            <!-- Linha quando não há dados -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+                <div class="no-data">
+                  <mat-icon>info</mat-icon>
+                  <span>Nenhum fundo encontrado</span>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </section>
 
-      <mat-form-field appearance="outline" class="modal-field">
-        <mat-label>Nome</mat-label>
-        <input matInput formControlName="nome" />
-        <mat-error *ngIf="editFormGroup.get('nome')?.hasError('required')">Nome é obrigatório</mat-error>
-      </mat-form-field>
+        <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+          (page)="onPageChange($event)" showFirstLastButtons>
+        </mat-paginator>
 
-      <mat-form-field appearance="outline" class="modal-field">
-        <mat-label>CNPJ</mat-label>
-        <input matInput formControlName="cnpj" />
-        <mat-error *ngIf="editFormGroup.get('cnpj')?.hasError('required')">CNPJ é obrigatório</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="modal-field">
-        <mat-label>Código Tipo</mat-label>
-        <input matInput formControlName="codigo_tipo" />
-        <mat-error *ngIf="editFormGroup.get('codigo_tipo')?.hasError('required')">Código Tipo é obrigatório</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="modal-field">
-        <mat-label>Patrimônio</mat-label>
-        <input matInput type="number" formControlName="patrimonio" />
-        <mat-error *ngIf="editFormGroup.get('patrimonio')?.hasError('required')">Patrimônio é obrigatório</mat-error>
-        <mat-error *ngIf="editFormGroup.get('patrimonio')?.hasError('min')">Patrimônio deve ser maior ou igual a 0</mat-error>
-      </mat-form-field>
-
-      <section class="modal-actions">
-        <button mat-stroked-button type="button" (click)="closeEditModal()" [disabled]="editLoading">Cancelar</button>
-        <button mat-raised-button color="primary" type="button" (click)="saveEditFundo()" [disabled]="editFormGroup.invalid || editLoading">
-          {{ editLoading ? 'Salvando...' : 'Salvar' }}
-        </button>
-      </section>
-    </form>
+        @if (totalRecords > 0) {
+        <section class="summary">
+          <span>Total de fundos: <strong>{{ totalRecords }}</strong></span>
+        </section>
+        }
+      </mat-card-content>
+    </mat-card>
   </section>
- </section>
-</main> 
-<app-footer>
+
+  <section class="edit-modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()">
+    <section class="edit-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Editar Fundo</h2>
+        <button mat-icon-button class="close-button" (click)="closeEditModal()" [disabled]="editLoading"
+          aria-label="Fechar modal">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="editFormGroup" class="modal-content">
+        <mat-form-field appearance="outline" class="modal-field">
+          <mat-label>Código</mat-label>
+          <input matInput type="text" formControlName="codigo" />
+          @if (editFormGroup.get('codigo')?.hasError('required') && editFormGroup.get('codigo')?.touched) {
+          <mat-error>codigo é obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="modal-field">
+          <mat-label>Nome</mat-label>
+          <input matInput type="text" formControlName="nome" />
+          @if (editFormGroup.get('nome')?.hasError('required') && editFormGroup.get('nome')?.touched) {
+          <mat-error>Nome é obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="modal-field">
+          <mat-label>CNPJ</mat-label>
+          <input matInput mask="00.000.000/0000-00" formControlName="cnpj" />
+          @if (editFormGroup.get('cnpj')?.hasError('required') && editFormGroup.get('cnpj')?.touched) {
+          <mat-error>CNPJ é obrigatório</mat-error>
+          }
+          @if (editFormGroup.get('cnpj')?.hasError('cnpjInvalid') && editFormGroup.get('cnpj')?.touched) {
+          <mat-error>CNPJ deve conter 14 dígitos</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="modal-field">
+          <mat-label>Código Tipo</mat-label>
+          <input matInput formControlName="codigo_tipo" />
+          @if (editFormGroup.get('codigo_tipo')?.hasError('required') && editFormGroup.get('codigo_tipo')?.touched) {
+          <mat-error>Tipo de fundo é obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="modal-field">
+          <mat-label>Patrimônio</mat-label>
+          <input matInput type="text" formControlName="patrimonio" mask="separator" thousandSeparator="."
+            decimalSeparator="," prefix="R$" [allowNegativeNumbers]="false"/>
+          @if (editFormGroup.get('patrimonio')?.hasError('required') && editFormGroup.get('patrimonio')?.touched) {
+          <mat-error>Patrimônio é obrigatório</mat-error>
+          }
+        </mat-form-field>
+
+        <section class="modal-actions">
+          <button mat-stroked-button type="button" (click)="closeEditModal()" [disabled]="editLoading">Cancelar</button>
+          <button mat-raised-button color="primary" type="button" (click)="saveEditFundo()"
+            [disabled]="editFormGroup.invalid || editLoading">
+            {{ editLoading ? 'Salvando...' : 'Salvar' }}
+          </button>
+        </section>
+      </form>
+    </section>
+  </section>
+</main>
+
+<app-footer></app-footer>

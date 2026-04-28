@@ -46,7 +46,6 @@
   text-align: left;
 }
 
-/* Botões */
 .form-actions {
   display: flex;
   gap: 16px;
@@ -63,7 +62,6 @@
   gap: 8px;
 }
 
-/* Link de registro */
 .register-link {
   display: flex;
   justify-content: center;
@@ -79,7 +77,6 @@
   font-size: 14px;
 }
 
-/* Spinner no botão */
 button mat-spinner {
   display: inline-block;
   margin-right: 4px;
@@ -96,7 +93,6 @@ button mat-spinner {
   height: 20px;
 }
 
-/* Responsividade */
 @media (max-width: 600px) {
   .main-content {
     margin-top: 56px;

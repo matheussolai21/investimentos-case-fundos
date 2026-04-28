@@ -18,7 +18,6 @@ constructor(private http: HttpClient ) { }
 
  getFoundsByCode(code: string): Observable<any> {
   const url = `${this.apiUrl}/fundos/${code}`;
-  console.log(' Chamando:', url);
   return this.http.get(url);
 }
 
@@ -30,7 +29,7 @@ constructor(private http: HttpClient ) { }
     const url = `${this.apiUrl}/fundos/${code}`;
     return this.http.delete(url);
   }
-
+ 
   PatchFoundsByCode(code: string, updates: Partial<Fundo>): Observable<any> {
     return this.http.patch<any>(`${this.apiUrl}/fundos/${code}`, updates);
   }

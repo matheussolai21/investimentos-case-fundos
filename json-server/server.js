@@ -49,11 +49,6 @@ server.use(middlewares);
 
 // ==================== ROTAS PÚBLICAS ====================
 
-// Health check
-server.get('/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
-
 // Login
 server.post('/login', (req, res) => {
   console.log('Login request:', req.body);
@@ -93,49 +88,6 @@ server.post('/login', (req, res) => {
   });
 });
 
-// Register
-server.post('/register', async (req, res) => {
-  const db = router.db;
-  const { username, email, password, nome } = req.body;
-  
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: 'Campos obrigatórios' });
-  }
-  
-  const userExists = db.get('usuarios').find({ username }).value();
-  if (userExists) {
-    return res.status(400).json({ error: 'Usuário já existe' });
-  }
-  
-  const emailExists = db.get('usuarios').find({ email }).value();
-  if (emailExists) {
-    return res.status(400).json({ error: 'Email já cadastrado' });
-  }
-  
-  const hashedPassword = bcrypt.hashSync(password, 10);
-  
-  const newUser = {
-    id: Date.now(),
-    username,
-    email,
-    password: hashedPassword,
-    nome: nome || username,
-    role: 'user',
-    created_at: new Date().toISOString()
-  };
-  
-  db.get('usuarios').push(newUser).write();
-  
-  const token = generateToken(newUser);
-  const { password: _, ...userWithoutPassword } = newUser;
-  
-  res.status(201).json({
-    success: true,
-    token,
-    user: userWithoutPassword
-  });
-});
-
 // ==================== ROTAS DE FUNDOS ====================
 
 // GET - Listar todos os fundos
@@ -154,7 +106,7 @@ server.get('/fundos', (req, res) => {
 
 // GET - Detalhes de um fundo por código
 server.get('/fundos/:codigo', (req, res) => {
-  console.log('🔵 Buscando fundo com código:', req.params.codigo);
+  console.log('Buscando fundo com código:', req.params.codigo);
   
   const db = router.db;
   const { codigo } = req.params;

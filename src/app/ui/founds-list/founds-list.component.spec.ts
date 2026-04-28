@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 
 import { FoundsListComponent } from './founds-list.component';
 import { FoundsService } from '../../Services/founds.service';
@@ -13,23 +13,21 @@ describe('FoundsListComponent', () => {
   let fixture: ComponentFixture<FoundsListComponent>;
   let routerSpy: jasmine.SpyObj<Router>;
   let snackBarSpy: jasmine.SpyObj<MatSnackBar>;
-  let foundsServiceStub: jasmine.SpyObj<FoundsService> & { foundListServer: Fundo[] };
+  let foundsServiceSpy: jasmine.SpyObj<FoundsService>;
 
   const apiFundA: Fundo = {
-    id: '1',
     codigo: 'FND-A',
     nome: 'Fundo A',
     cnpj: '11.111.111/0001-11',
-    codigo_tipo: '1',
+    codigo_tipo: 1,
     patrimonio: 1000
   };
 
   const apiFundB: Fundo = {
-    id: '2',
     codigo: 'FND-B',
     nome: 'Fundo B',
     cnpj: '22.222.222/0001-22',
-    codigo_tipo: '2',
+    codigo_tipo: 2,
     patrimonio: 2000
   };
 
@@ -40,11 +38,14 @@ describe('FoundsListComponent', () => {
     const serviceSpy = jasmine.createSpyObj<FoundsService>('FoundsService', [
       'getFounds',
       'getFoundsByCode',
-      'PutHeritageByCode'
-    ]) as jasmine.SpyObj<FoundsService> & { foundListServer: Fundo[] };
-    serviceSpy.foundListServer = [];
+      'PatchFoundsByCode',
+      'DeleteFoundsByCode'
+    ]);
     serviceSpy.getFounds.and.returnValue(of([apiFundA, apiFundB]));
-    foundsServiceStub = serviceSpy;
+    serviceSpy.getFoundsByCode.and.returnValue(of(apiFundB));
+    serviceSpy.PatchFoundsByCode.and.returnValue(of({}));
+    serviceSpy.DeleteFoundsByCode.and.returnValue(of({}));
+    foundsServiceSpy = serviceSpy;
 
     TestBed.configureTestingModule({
       imports: [
@@ -54,7 +55,7 @@ describe('FoundsListComponent', () => {
       providers: [
         { provide: Router, useValue: routerSpy },
         { provide: MatSnackBar, useValue: snackBarSpy },
-        { provide: FoundsService, useValue: foundsServiceStub }
+        { provide: FoundsService, useValue: foundsServiceSpy }
       ]
     })
     .compileComponents();
@@ -70,31 +71,16 @@ describe('FoundsListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should merge local and api funds without duplicates, keeping local first', () => {
-    const localFund: Fundo = {
-      id: '3',
-      codigo: 'FND-X',
-      nome: 'Fundo Local',
-      cnpj: '33.333.333/0001-33',
-      codigo_tipo: '3',
-      patrimonio: 3000
-    };
-    foundsServiceStub.foundListServer = [localFund, apiFundA];
-
+  it('should load and copy API funds to dataSource and filteredDataSource', () => {
     component.carregarFundos();
 
-    expect(component.dataSource.length).toBe(3);
-    expect(component.dataSource[0].codigo).toBe('FND-X');
-    expect(component.dataSource[1].codigo).toBe('FND-A');
-    expect(component.dataSource[2].codigo).toBe('FND-B');
+    expect(component.dataSource).toEqual([apiFundA, apiFundB]);
+    expect(component.filteredDataSource).toEqual([apiFundA, apiFundB]);
   });
 
-  it('should copy datasource and redirect to form', () => {
-    component.dataSource = [apiFundA, apiFundB];
-
+  it('should redirect to form page', () => {
     component.RedirectByForm();
 
-    expect(foundsServiceStub.foundListServer).toEqual([apiFundA, apiFundB]);
     expect(routerSpy.navigate).toHaveBeenCalledWith(['forms-new-founds']);
   });
 
@@ -102,18 +88,47 @@ describe('FoundsListComponent', () => {
     component.dataSource = [apiFundA, apiFundB];
     component.searchTerm = 'fnd-b';
 
-    component.onSearchChange();
+    component.atualizarFiltro();
 
     expect(component.filteredDataSource.length).toBe(1);
     expect(component.filteredDataSource[0].codigo).toBe('FND-B');
   });
 
-  it('should show message and stop when edit form is invalid', () => {
+  it('should return early when saveEditFundo is invalid', () => {
     component.editFormGroup.reset();
 
     component.saveEditFundo();
 
-    expect(component).toBeTruthy();
+    expect(foundsServiceSpy.PatchFoundsByCode).not.toHaveBeenCalled();
+  });
+
+  it('should search locally before API call when code exists in dataSource', () => {
+    component.dataSource = [apiFundA, apiFundB];
+
+    component.filterFoundByCode('fnd-a');
+
+    expect(foundsServiceSpy.getFoundsByCode).not.toHaveBeenCalled();
+    expect(component.filteredDataSource).toEqual([apiFundA]);
+  });
+
+  it('should call API when code is not in local dataSource', () => {
+    component.dataSource = [apiFundA];
+
+    component.filterFoundByCode('fnd-b');
+
+    expect(foundsServiceSpy.getFoundsByCode).toHaveBeenCalledWith('FND-B');
+    expect(component.filteredDataSource).toEqual([apiFundB]);
+  });
+
+  it('should clear list and notify on search API error', () => {
+    foundsServiceSpy.getFoundsByCode.and.returnValue(
+      throwError(() => ({ status: 404, statusText: 'Not Found', message: 'Not Found' }))
+    );
+    component.dataSource = [];
+
+    component.filterFoundByCode('nao-existe');
+
+    expect(component.filteredDataSource).toEqual([]);
   });
 
 

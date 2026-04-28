@@ -66,7 +66,6 @@ export class LoginComponent implements OnInit {
       next: (response: AuthResponse) => {
         console.log('Login realizado com sucesso:', response);
         
-        // Salvar token no localStorage
         if (response.token) {
           localStorage.setItem('token', response.token);
           localStorage.setItem('user', JSON.stringify(response.username));
@@ -77,7 +76,6 @@ export class LoginComponent implements OnInit {
           panelClass: ['success-snackbar']
         });
         
-        // Redirecionar para dashboard ou lista de fundos
         this.router.navigate(['/found-list']);
         this.loading.set(false);
       },
@@ -115,7 +113,6 @@ export class LoginComponent implements OnInit {
     this.Login(auth);
   }
 
-  // Método para limpar formulário
   limparFormulario(): void {
     this.loginForm.reset();
   }

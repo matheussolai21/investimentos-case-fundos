@@ -41,21 +41,16 @@ describe('LoginComponent', () => {
   });
 
  it('should show message when submit with invalid form', () => {
-  // Arrange - Garantir que o formulário está inválido
-  component.loginForm.setValue({
-    username: '',
-    password: ''  
+    component.loginForm.setValue({
+      username: '',
+      password: ''
+    });
+
+    component.loginForm.markAllAsTouched();
+    component.onSubmit();
+
+    expect(authServiceSpy.PostLogin).not.toHaveBeenCalled();
   });
-  
-  // Marcar como touched para ativar validação
-  component.loginForm.markAllAsTouched();
-  
-  // Act
-  component.onSubmit();
-  
-  // Assert
-  expect(authServiceSpy.PostLogin).not.toHaveBeenCalled();
-});
 
   it('should call login method with form values when submit is valid', () => {
     spyOn(component, 'Login');
@@ -80,7 +75,18 @@ describe('LoginComponent', () => {
     expect(routerSpy.navigate).toHaveBeenCalledWith(['/found-list']);
     expect(component.loading()).toBeFalse();
   });
-  
+
+  it('should handle login error and keep user on login', () => {
+    const payload = { username: 'admin', password: 'errada' };
+    authServiceSpy.PostLogin.and.returnValue(
+      throwError(() => ({ status: 401, error: { error: 'Usuário ou senha inválidos' } }))
+    );
+
+    component.Login(payload);
+
+    expect(routerSpy.navigate).not.toHaveBeenCalled();
+    expect(component.loading()).toBeFalse();
+  });
 
 
-});''
+});

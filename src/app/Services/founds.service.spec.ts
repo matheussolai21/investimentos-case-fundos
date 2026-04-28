@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { FoundsService } from './founds.service';
-import { Fundo } from '../interfaces/fundos.interface';
+import { AuthService } from './auth.service';
+import { AuthResponse } from '../interfaces/auth.interface';
 
-describe('Service: Founds', () => {
-  let service: FoundsService;
+describe('Service: Auth', () => {
+  let service: AuthService;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
@@ -12,7 +12,7 @@ describe('Service: Founds', () => {
       imports: [HttpClientTestingModule]
     });
 
-    service = TestBed.inject(FoundsService);
+    service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -24,49 +24,38 @@ describe('Service: Founds', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should get all funds', () => {
-    const mockFunds: Fundo[] = [
-      { id: '1', codigo: 'FND-1', nome: 'Fundo 1', cnpj: '11.111.111/0001-11', codigo_tipo: '1', patrimonio: 1000 }
-    ];
-
-    service.getFounds().subscribe((result) => {
-      expect(result).toEqual(mockFunds);
-    });
-
-    const req = httpMock.expectOne('http://localhost:3000/fundos');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockFunds);
-  });
-
-  it('should get fund by code', () => {
-    const fund = { id: '1', codigo: 'ABC', nome: 'Fundo ABC', cnpj: '22.222.222/0001-22', codigo_tipo: '2', patrimonio: 5000 };
-
-    service.getFoundsByCode('ABC').subscribe((result) => {
-      expect(result).toEqual(fund);
-    });
-
-    const req = httpMock.expectOne('http://localhost:3000/fundos/:ABC');
-    expect(req.request.method).toBe('GET');
-    req.flush(fund);
-  });
-
-  it('should post a new fund', () => {
-    const payload: Fundo = {
-      id: '2',
-      codigo: 'FND-2',
-      nome: 'Fundo 2',
-      cnpj: '33.333.333/0001-33',
-      codigo_tipo: '3',
-      patrimonio: 9000
+  it('should post login payload to usuarios endpoint', () => {
+    const payload = { username: 'admin', password: '123456' };
+    const response: AuthResponse = {
+      username: 'admin',
+      password: '123456',
+      token: 'jwt-token'
     };
 
-    service.PostFounds(payload).subscribe((result) => {
-      expect(result).toEqual(payload);
+    service.PostLogin(payload).subscribe((result) => {
+      expect(result).toEqual(response);
     });
 
-    const req = httpMock.expectOne('http://localhost:3000/fundos');
+    const req = httpMock.expectOne('http://localhost:3000/login');
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(payload);
-    req.flush(payload);
+    req.flush(response);
+  });
+
+  it('should propagate login error response', () => {
+    const payload = { username: 'admin', password: 'wrong' };
+    const errorPayload = { error: 'Credenciais invalidas' };
+
+    service.PostLogin(payload).subscribe({
+      next: () => fail('expected an error response'),
+      error: (error) => {
+        expect(error.status).toBe(401);
+        expect(error.error).toEqual(errorPayload);
+      }
+    });
+
+    const req = httpMock.expectOne('http://localhost:3000/login');
+    expect(req.request.method).toBe('POST');
+    req.flush(errorPayload, { status: 401, statusText: 'Unauthorized' });
   });
 });

@@ -14,6 +14,8 @@ import { HeaderComponent } from '../../component/header/header.component';
 import { FooterComponent } from '../../component/footer/footer.component';
 import { FoundsService } from '../../Services/founds.service';
 import { Fundo } from '../../interfaces/fundos.interface';
+import { NgxMaskDirective } from 'ngx-mask';
+import { ValidatorsService } from '../../Services/validators.service';
 
 export interface TipoFundo {
   codigo: number;
@@ -26,7 +28,7 @@ export interface TipoFundo {
   templateUrl: './Forms-new-founds.component.html',
   styleUrls: ['./Forms-new-founds.component.css'],
   standalone: true,
-    imports: [
+  imports: [
     CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -37,11 +39,12 @@ export interface TipoFundo {
     MatIconModule,
     MatProgressSpinnerModule,
     HeaderComponent,
-    FooterComponent
-    ]
+    FooterComponent,
+    NgxMaskDirective
+  ]
 })
 export class FormsNewFoundsComponent implements OnInit {
- 
+
   fundoForm: FormGroup;
   loading = false;
   tiposFundo: TipoFundo[] = [];
@@ -51,25 +54,26 @@ export class FormsNewFoundsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private fb: FormBuilder,
     private foundsService: FoundsService,
-    private router: Router
+    private router: Router,
+    public validatorsService: ValidatorsService
 
-  ) { 
-        this.fundoForm = this.fb.group({
-      codigo: ['', [Validators.required, Validators.minLength(3)]],    
-      nome: ['', [Validators.required, Validators.minLength(3)]],
-      cnpj: ['', [Validators.required, Validators.pattern(/^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/)]],
-      codigo_tipo: ['', Validators.required],
-      patrimonio: ['', [Validators.required, Validators.min(0.01)]]
+  ) {
+    this.fundoForm = this.fb.group({
+      codigo: ['', [Validators.required, Validators.maxLength(20)]],
+      nome: ['', [Validators.required, Validators.maxLength(100)]],
+      cnpj: ['', [Validators.required, Validators.maxLength(18)]],
+      codigo_tipo: ['', [Validators.required]],
+      patrimonio: ['', [Validators.required]]
     });
   }
 
-  
+
 
   ngOnInit() {
   }
 
   carregarTiposFundo() {
-    this.foundsService.getFounds().subscribe({  // fazer lista dos codigos de investimento
+    this.foundsService.getFounds().subscribe({
       next: (fundos) => {
         console.log(fundos);
       },
@@ -80,50 +84,48 @@ export class FormsNewFoundsComponent implements OnInit {
     });
   }
 
-onSubmit() {
-  if (this.fundoForm.invalid) {
-    this.snackBar.open('Preencha todos os campos corretamente', 'Fechar', { duration: 3000 });
-    return;
+  onSubmit() {
+    if (this.fundoForm.invalid) {
+      this.snackBar.open('Preencha todos os campos corretamente', 'Fechar', { duration: 3000 });
+      return;
+    }
+
+    this.loading = true;
+
+    const cnpjLimpo = this.fundoForm.value.cnpj.replace(/\D/g, '');
+
+    const fundoData: Fundo = {
+      codigo: this.fundoForm.value.codigo, // Gerar código único ou usar um serviço para isso
+      nome: this.fundoForm.value.nome.trim(),
+      cnpj: this.validatorsService.formatCNPJ(this.fundoForm.value.cnpj.trim()),
+      codigo_tipo: Number(this.fundoForm.value.codigo_tipo),
+      patrimonio: Number(this.fundoForm.value.patrimonio)
+    };
+
+    this.AddFounds(fundoData) // inserir no component da proxima pagina
+
+
+    this.snackBar.open(`Fundo ${fundoData.codigo} salvo com sucesso!`, 'Fechar', { duration: 3000 });
   }
-
-  this.loading = true;
-
-  const cnpjLimpo = this.fundoForm.value.cnpj.replace(/\D/g, '');
-  
-  const fundoData: Fundo = {
-    codigo: this.fundoForm.value.codigo, // Gerar código único ou usar um serviço para isso
-    nome: this.fundoForm.value.nome.trim(),
-    cnpj: this.fundoForm.value.cnpj.trim(),
-    codigo_tipo: Number(this.fundoForm.value.codigo_tipo),
-    patrimonio: Number(this.fundoForm.value.patrimonio)
-  };
-
-  this.AddFounds(fundoData) // inserir no component da proxima pagina
-    
-
-  this.snackBar.open(`Fundo ${fundoData.codigo} salvo com sucesso!`, 'Fechar', { duration: 3000 });
-  this.router.navigate(['/found-list']);
-}
 
 
   cancelar() {
     this.router.navigate(['found-list']);
   }
 
-  AddFounds(fundo: Fundo) {  // inserir no component da proxima pagina
-      this.foundsService.PostFounds(fundo).subscribe({
-        next: (response) => {
-          console.log('Sucesso:', response);
-          this.snackBar.open('Fundo criado com sucesso!', 'Fechar', { duration: 3000 });
-          setTimeout(() => this.router.navigate(['/found-list']), 2000);
-        },
-        error: (error) => {
-          console.error('Erro:', error);
-          this.snackBar.open(error.error?.error || 'Erro ao criar fundo', 'Fechar', { duration: 5000 });
-        }
-      });
-  
-      // this.dialog.open(DialogAdicionarFundoComponent);
+  AddFounds(fundo: Fundo) { 
+    this.foundsService.PostFounds(fundo).subscribe({
+      next: (response) => {
+        console.log('Sucesso:', response);
+        this.snackBar.open('Fundo criado com sucesso!', 'Fechar', { duration: 3000 });
+        setTimeout(() => this.router.navigate(['/found-list']), 2000);
+      },
+      error: (error) => {
+        console.error('Erro:', error);
+        this.loading = false;
+        this.snackBar.open(error.error?.error || 'Erro ao criar fundo');
+      }
+    });
   }
-  
+
 }

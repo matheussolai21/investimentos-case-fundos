@@ -30,7 +30,6 @@ export class HeaderComponent implements OnInit {
 
 
   logout(): void {
-    // Implementar lógica de logout
     console.log('Usuário deslogado');
       this.router.navigate(['/login']);
   }

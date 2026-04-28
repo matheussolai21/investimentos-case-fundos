@@ -18,6 +18,8 @@ import { FoundsService } from "../../Services/founds.service";
 import { Route, Router } from "@angular/router";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { ConfirmDeleteComponent } from "../../component/confirm-delete/confirm-delete.component";
+import { NgxMaskDirective } from "ngx-mask";
+import { ValidatorsService } from "../../Services/validators.service";
 
 @Component({
   selector: 'app-founds-list',
@@ -41,7 +43,8 @@ import { ConfirmDeleteComponent } from "../../component/confirm-delete/confirm-d
     MatCardModule,
     MatInputModule,
     MatFormFieldModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxMaskDirective
   ]
 })
 export class FoundsListComponent implements OnInit, OnDestroy {
@@ -56,7 +59,6 @@ export class FoundsListComponent implements OnInit, OnDestroy {
   editingOriginalCode = '';
   editFormGroup: FormGroup;
 
-  // Paginação
   pageSize = 10;
   pageIndex = 0;
   pageSizeOptions: number[] = [5, 10, 25, 50];
@@ -68,15 +70,17 @@ export class FoundsListComponent implements OnInit, OnDestroy {
     private router: Router,
     @Inject(DOCUMENT) private document: Document,
     private formBuilder: FormBuilder,
+    public validatorsService: ValidatorsService
   ) {
     this.editFormGroup = this.formBuilder.group({
-      codigo: [{ value: '', disabled: true }],
-      nome: ['', Validators.required],
-      cnpj: ['', Validators.required],
-      codigo_tipo: [{ value: '', disabled: true }, Validators.required],
-      patrimonio: ['', [Validators.required, Validators.min(0)]]
+     codigo: [{ value: '', disabled: true }, [Validators.maxLength(20)]],   
+     nome: ['', [Validators.required, Validators.maxLength(100)]],
+     cnpj: ['', [Validators.required, Validators.maxLength(18)]],
+     codigo_tipo: [{ value: '', disabled: true }, Validators.required],
+     patrimonio: ['', [Validators.required]]
     });
   }
+
 
   ngOnInit() {
     this.carregarFundos();
@@ -92,31 +96,30 @@ export class FoundsListComponent implements OnInit, OnDestroy {
       this.closeEditModal();
     }
   }
-carregarFundos() {
-  this.foundsService.getFounds().subscribe({
-    next: (fundos: Fundo[]) => {
-      // Armazena apenas na dataSource do componente
-      this.dataSource = Array.isArray(fundos) ? fundos : [];
-      
-      // Atualiza o filteredDataSource para exibição
-      this.filteredDataSource = [...this.dataSource];
-      
-      console.log('Lista carregada da API com sucesso:', this.dataSource.length, 'fundos');
-      
-      // Aplica filtro se existir
-      this.atualizarFiltro();
-    },
-    error: (error: unknown) => {
-      console.error('❌ Erro ao carregar fundos:', error);
-      this.dataSource = [];
-      this.filteredDataSource = [];
-      this.atualizarFiltro();
-      
-      // Opcional: mostrar mensagem para o usuário
-      this.snackBar?.open('Erro ao carregar lista de fundos', 'Fechar', { duration: 3000 });
-    }
-  });
-}
+
+
+  carregarFundos() {
+    this.foundsService.getFounds().subscribe({
+      next: (fundos: Fundo[]) => {
+        this.dataSource = Array.isArray(fundos) ? fundos : [];
+
+        this.filteredDataSource = [...this.dataSource];
+
+        console.log('Lista carregada da API com sucesso:', this.dataSource.length, 'fundos');
+
+        this.atualizarFiltro();
+      },
+      error: (error: unknown) => {
+        console.error('Erro ao carregar fundos:', error);
+        this.dataSource = [];
+        this.filteredDataSource = [];
+        this.atualizarFiltro();
+
+        this.snackBar?.open('Erro ao carregar lista de fundos', 'Fechar', { duration: 3000 });
+      }
+    });
+  }
+
   atualizarFiltro() {
     if (!this.searchTerm) {
       this.filteredDataSource = [...this.dataSource];
@@ -132,7 +135,6 @@ carregarFundos() {
   }
 
 
-  // Paginação
   get paginatedData(): Fundo[] {
     const start = this.pageIndex * this.pageSize;
     const end = start + this.pageSize;
@@ -148,122 +150,115 @@ carregarFundos() {
     return this.filteredDataSource.length;
   }
 
-  // Ações
-  RedirectByForm() { // redirecionar pra tela nova
+  RedirectByForm() { 
     this.snackBar.open('Abrindo formulário para adicionar fundo...', 'Fechar', { duration: 2000 });
     this.router.navigate(['forms-new-founds']);
   }
 
-filterFoundByCode(code: string) {
-  if (!code || code.trim() === '') {
-    this.carregarFundos();
-    return;
-  }
-
-  console.log(' Buscando código:', code);
-  this.loading = true;
-  
-  const codigoBusca = code.trim().toUpperCase();
-  
-  // Primeiro tenta encontrar localmente
-  const fundoLocal = this.dataSource.find(fundo => 
-    fundo.codigo.toUpperCase() === codigoBusca
-  );
-  
-  if (fundoLocal) {
-    console.log('Fundo encontrado localmente:', fundoLocal);
-    this.filteredDataSource = [fundoLocal];
-    this.loading = false;
-    this.snackBar.open(`Fundo ${fundoLocal.codigo} encontrado!`, 'Fechar', { duration: 3000 });
-    return;
-  }
-  
-  // Se não encontrar localmente, busca na API
-  this.foundsService.getFoundsByCode(codigoBusca).subscribe({
-    next: (fundo) => {
-      console.log('Fundo encontrado na API:', fundo);
-      this.dataSource = [fundo];
-      this.filteredDataSource = [fundo];
-      this.loading = false;
-      this.snackBar.open(`Fundo ${fundo.codigo} - ${fundo.nome} encontrado!`, 'Fechar', { duration: 3000 });
-    },
-    error: (erro) => {
-      console.error('❌ Erro:', erro.status, erro.statusText);
-      this.filteredDataSource = [];
-      this.loading = false;
-      
-      if (erro.status === 404) {
-        this.snackBar.open(` Fundo com código ${code} não encontrado`, 'Fechar', { duration: 4000 });
-      } else {
-        this.snackBar.open(`❌Erro na busca: ${erro.message}`, 'Fechar', { duration: 4000 });
-      }
+  filterFoundByCode(code: string) {
+    if (!code || code.trim() === '') {
+      this.carregarFundos();
+      return;
     }
-  });
-}
+
+    console.log(' Buscando código:', code);
+    this.loading = true;
+
+    const codigoBusca = code.trim().toUpperCase();
+
+    // Primeiro tenta encontrar localmente
+    const fundoLocal = this.dataSource.find(fundo =>
+      fundo.codigo.toUpperCase() === codigoBusca
+    );
+
+    if (fundoLocal) {
+      console.log('Fundo encontrado localmente:', fundoLocal);
+      this.filteredDataSource = [fundoLocal];
+      this.loading = false;
+      this.snackBar.open(`Fundo ${fundoLocal.codigo} encontrado!`, 'Fechar', { duration: 3000 });
+      return;
+    }
+
+    // Se não encontrar localmente, busca na API
+    this.foundsService.getFoundsByCode(codigoBusca).subscribe({
+      next: (fundo) => {
+        console.log('Fundo encontrado na API:', fundo);
+        this.dataSource = [fundo];
+        this.filteredDataSource = [fundo];
+        this.loading = false;
+        this.snackBar.open(`Fundo ${fundo.codigo} - ${fundo.nome} encontrado!`, 'Fechar', { duration: 3000 });
+      },
+      error: (erro) => {
+        console.error('Erro:', erro.status, erro.statusText);
+        this.filteredDataSource = [];
+        this.loading = false;
+
+        if (erro.status === 404) {
+          this.snackBar.open(` Fundo com código ${code} não encontrado`, 'Fechar', { duration: 4000 });
+        } else {
+          this.snackBar.open(`Erro na busca: ${erro.message}`, 'Fechar', { duration: 4000 });
+        }
+      }
+    });
+  }
 
 
   deleteFound(fundo: Fundo): void {
-  const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
-    width: '400px',
-    data: { 
-      nome: fundo.nome,
-      codigo: fundo.codigo
-    }
-  });
+    const dialogRef = this.dialog.open(ConfirmDeleteComponent, {
+      width: '400px',
+      data: {
+        nome: fundo.nome,
+        codigo: fundo.codigo
+      }
+    });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      //  Chama a API para deletar
-      this.foundsService.DeleteFoundsByCode(fundo.codigo).subscribe({
-        next: () => {
-          // Remove da lista local após sucesso na API
-          this.dataSource = this.dataSource.filter(f => f.codigo !== fundo.codigo);
-          this.atualizarFiltro();
-          this.snackBar.open(`Fundo ${fundo.nome} excluído com sucesso!`, 'Fechar', { 
-            duration: 3000,
-            panelClass: ['success-snackbar']
-          });
-        },
-        error: (error) => {
-          console.error('Erro ao excluir:', error);
-          let mensagemErro = 'Erro ao excluir o fundo';
-          
-          if (error.status === 404) {
-            mensagemErro = `Fundo ${fundo.codigo} não encontrado`;
-          } else if (error.error?.error) {
-            mensagemErro = error.error.error;
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.foundsService.DeleteFoundsByCode(fundo.codigo).subscribe({
+          next: () => {
+            this.dataSource = this.dataSource.filter(f => f.codigo !== fundo.codigo);
+            this.atualizarFiltro();
+            this.snackBar.open(`Fundo ${fundo.nome} excluído com sucesso!`, 'Fechar', {
+              duration: 3000,
+              panelClass: ['success-snackbar']
+            });
+          },
+          error: (error) => {
+            console.error('Erro ao excluir:', error);
+            let mensagemErro = 'Erro ao excluir o fundo';
+
+            if (error.status === 404) {
+              mensagemErro = `Fundo ${fundo.codigo} não encontrado`;
+            } else if (error.error?.error) {
+              mensagemErro = error.error.error;
+            }
+
+            this.snackBar.open(`❌ ${mensagemErro}`, 'Fechar', {
+              duration: 5000,
+              panelClass: ['error-snackbar']
+            });
           }
-          
-          this.snackBar.open(`❌ ${mensagemErro}`, 'Fechar', { 
-            duration: 5000,
-            panelClass: ['error-snackbar']
-          });
-        }
-      });
-    }
-  });
-}
-
-
-  formatHeritage(valor: number): string {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(valor);
+        });
+      }
+    });
   }
 
-   editFound(fundo: Fundo) {
+
+
+
+  editFound(fundo: Fundo) {
     this.editingOriginalCode = fundo.codigo;
     this.editFormGroup.patchValue({
       codigo: fundo.codigo,
       nome: fundo.nome,
       cnpj: fundo.cnpj,
       codigo_tipo: fundo.codigo_tipo,
-      patrimonio: Number(fundo.patrimonio)
+      patrimonio: fundo.patrimonio
     });
     this.showEditModal = true;
     this.disableBodyScroll();
   }
+  
 
   closeEditModal(): void {
     this.showEditModal = false;
@@ -280,30 +275,44 @@ filterFoundByCode(code: string) {
   }
 
   saveEditFundo(): void {
-  if (this.editFormGroup.invalid) return;
-  
-  this.editLoading = true;
-  const formValue = this.editFormGroup.getRawValue();
-  
-  // Prepara apenas o patrimônio (se for o caso)
-  const updates = {
-    patrimonio: Number(formValue.patrimonio),
-    nome: formValue.nome.trim(),
-    cnpj: formValue.cnpj.trim(),
-  };
-  
-  this.foundsService.PatchFoundsByCode(this.editingOriginalCode, updates).subscribe({
-    next: (response) => {
-      console.log('Patrimônio atualizado:', response);
-      this.editLoading = false;
-      this.carregarFundos();
-      this.closeEditModal();
-    },
-    error: (error) => {
-      console.error('Erro:', error);
-      this.editLoading = false;
+    if (this.editFormGroup.invalid) return;
+
+    this.editLoading = true;
+    const formValue = this.editFormGroup.getRawValue();
+
+    const updates = {
+      patrimonio: Number(formValue.patrimonio),
+      nome: formValue.nome.trim(),
+      cnpj: this.validatorsService.formatCNPJ(formValue.cnpj.trim()),
+    };
+
+    this.foundsService.PatchFoundsByCode(this.editingOriginalCode, updates).subscribe({
+      next: (response) => {
+        console.log('Patrimônio atualizado:', response);
+        this.editLoading = false;
+        this.carregarFundos();
+        this.closeEditModal();
+      },
+      error: (error) => {
+        console.error('Erro:', error);
+        this.editLoading = false;
+      }
+    });
+  }
+
+  convertPatrimonioToNumber() {
+  const control = this.editFormGroup.get('patrimonio');
+  let value = control?.value;
+  if (typeof value === 'string') {
+    // Remove tudo exceto números, vírgula e ponto (mantém separador decimal)
+    const numericStr = value.replace(/[^0-9,.]/g, '').replace(',', '.');
+    const numberValue = parseFloat(numericStr);
+    if (!isNaN(numberValue)) {
+      control?.setValue(numberValue, { emitEvent: false });
     }
-  });
+  }
 }
+
+
 
 }
