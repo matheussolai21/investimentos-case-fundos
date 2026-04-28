@@ -106,7 +106,8 @@
     </mat-card>
   </section>
 
-  <section class="edit-modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()">
+  @if (showEditModal) {
+  <section class="edit-modal-backdrop" (click)="closeEditModal()">
     <section class="edit-modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h2>Editar Fundo</h2>
@@ -155,7 +156,7 @@
         <mat-form-field appearance="outline" class="modal-field">
           <mat-label>Patrimônio</mat-label>
           <input matInput type="text" formControlName="patrimonio" mask="separator" thousandSeparator="."
-            decimalSeparator="," prefix="R$" [allowNegativeNumbers]="false"/>
+            decimalSeparator="," prefix="R$" [allowNegativeNumbers]="false" />
           @if (editFormGroup.get('patrimonio')?.hasError('required') && editFormGroup.get('patrimonio')?.touched) {
           <mat-error>Patrimônio é obrigatório</mat-error>
           }
@@ -171,6 +172,7 @@
       </form>
     </section>
   </section>
+  }
 </main>
 
 <app-footer></app-footer>
