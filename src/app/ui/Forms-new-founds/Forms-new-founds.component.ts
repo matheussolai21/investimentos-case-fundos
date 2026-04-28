@@ -60,22 +60,9 @@ export class FormsNewFoundsComponent implements OnInit {
     });
   }
 
-
-
   ngOnInit() {
   }
 
-  carregarTiposFundo() {
-    this.foundsService.getFounds().subscribe({
-      next: (fundos) => {
-        console.log(fundos);
-      },
-      error: (error) => {
-        console.error('Erro ao carregar tipos:', error);
-        this.snackBar.open('Erro ao carregar tipos de fundo', 'Fechar', { duration: 3000 });
-      }
-    });
-  }
 
   onSubmit() {
     if (this.fundoForm.invalid) {
