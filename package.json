@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "server": "npx json-server db.json"
+    "node": "json-server node server js",
+    "dev": "concurrently \"npm run start\" \"npm run node\""
   },
   "private": true,
   "dependencies": {
@@ -33,6 +34,7 @@
     "@angular/compiler-cli": "^17.3.0",
     "@types/jasmine": "~5.1.0",
     "@types/mocha": "^10.0.10",
+    "concurrently": "^9.2.1",
     "cypress": "^15.14.1",
     "jasmine-core": "~5.1.0",
     "json-server": "^0.17.4",

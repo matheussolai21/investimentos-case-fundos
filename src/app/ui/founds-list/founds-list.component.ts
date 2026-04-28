@@ -73,7 +73,7 @@ export class FoundsListComponent implements OnInit, OnDestroy {
       codigo: [{ value: '', disabled: true }],
       nome: ['', Validators.required],
       cnpj: ['', Validators.required],
-      codigo_tipo: ['', Validators.required],
+      codigo_tipo: [{ value: '', disabled: true }, Validators.required],
       patrimonio: ['', [Validators.required, Validators.min(0)]]
     });
   }
@@ -213,13 +213,13 @@ filterFoundByCode(code: string) {
 
   dialogRef.afterClosed().subscribe(result => {
     if (result) {
-      // ✅ Chama a API para deletar
+      //  Chama a API para deletar
       this.foundsService.DeleteFoundsByCode(fundo.codigo).subscribe({
         next: () => {
           // Remove da lista local após sucesso na API
           this.dataSource = this.dataSource.filter(f => f.codigo !== fundo.codigo);
           this.atualizarFiltro();
-          this.snackBar.open(`✅ Fundo ${fundo.nome} excluído com sucesso!`, 'Fechar', { 
+          this.snackBar.open(`Fundo ${fundo.nome} excluído com sucesso!`, 'Fechar', { 
             duration: 3000,
             panelClass: ['success-snackbar']
           });
@@ -294,13 +294,13 @@ filterFoundByCode(code: string) {
   
   this.foundsService.PatchFoundsByCode(this.editingOriginalCode, updates).subscribe({
     next: (response) => {
-      console.log('✅ Patrimônio atualizado:', response);
+      console.log('Patrimônio atualizado:', response);
       this.editLoading = false;
       this.carregarFundos();
       this.closeEditModal();
     },
     error: (error) => {
-      console.error('❌ Erro:', error);
+      console.error('Erro:', error);
       this.editLoading = false;
     }
   });
