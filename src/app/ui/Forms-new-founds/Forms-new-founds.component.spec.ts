@@ -68,7 +68,7 @@ describe('FormsNewFoundsComponent', () => {
     component.fundoForm.setValue({
       codigo: 'FND001',
       nome: 'Novo Fundo',
-      cnpj: '12345678000199',      // sem formatação
+      cnpj: '12345678000199',      
       codigo_tipo: '2',
       patrimonio: 2500
     });
